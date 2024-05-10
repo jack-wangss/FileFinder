@@ -5,12 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LibFinder"
         mc:Ignorable="d"
-        Title="LibFinder" Height="450" Width="400">
+        Title="LibFinder" Height="450" Width="600">
     <Window.DataContext>
         <local:MainWindowViewModel/>
     </Window.DataContext>
-    <Grid>
+    <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -21,28 +23,47 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="50"/>
         </Grid.ColumnDefinitions>
-  
+
+        <!-- Set dumpbin.exe Path -->
+        <Button Grid.Row="0" Grid.Column="0" Content="dumpbin.exe" Margin="5" Command="{Binding SelectDumpbinPathCommand}"
+              Background="WhiteSmoke"/>
+        <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding DumpbinPath}"/>
+
         <!-- Find Button -->
-        <Button Grid.Row="0" Grid.Column="2" Content="Find" Margin="0,5,5,5"/>
+        <Button Grid.Row="4" Grid.Column="2" Content="Find" Margin="0,5,5,5" Background="LightBlue" Command="{Binding FindCommand}"/>
 
         <!-- Symbol Name Input -->
-        <Label Grid.Row="0" Grid.Column="0" Content="Symbol Name:"/>
-        <TextBox Grid.Row="0" Grid.Column="1" x:Name="SymbolNameTextBox" Margin="5"/>
+        <Label Grid.Row="1" Grid.Column="0" Content="Symbol Name:"/>
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="SymbolNameTextBox" Margin="5" Text="{Binding Symbol}"/>
 
         <!-- Library Path Input -->
-        <Button Grid.Row="1" Grid.Column="0" Content="Select Path" Margin="5" Command="{Binding OpenFileCommand}" />
-        <Label Grid.Row="1" Grid.Column="1" Content="{Binding FolderPath}"/>
+        <Button Grid.Row="2" Grid.Column="0" Content="Select Path" Margin="5" Command="{Binding OpenFileCommand}"
+                     Background="WhiteSmoke"/>
+        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding FolderPath}"/>
 
         <!-- Recursive Checkbox -->
-        <CheckBox Grid.Row="2" Grid.Column="0" Content="Recursive" Grid.ColumnSpan="2" x:Name="RecursiveCheckBox" Margin="5"/>
+        <CheckBox Grid.Row="3" Grid.Column="0" Content="Recursive" Grid.ColumnSpan="2" x:Name="RecursiveCheckBox" Margin="5"
+                  IsChecked="{Binding RecursiveSearch}" />
 
         <!-- Results List -->
-        <ListView Grid.Row="4" Grid.ColumnSpan="3" x:Name="ResultsListView">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Library File" DisplayMemberBinding="{Binding Path}"/>
-                </GridView>
-            </ListView.View>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Results:" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+        <ListView Grid.Row="5" Grid.ColumnSpan="3" x:Name="ResultsListView" ItemsSource="{Binding ResultList}"  
+                  HorizontalContentAlignment="Stretch">
+          
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Path}" TextWrapping="Wrap"/>
+                        <Button Grid.Column="1" Content="Copy Path" Background="WhiteSmoke"  Command="{Binding CopyPathCommand}"/>
+                        <Button Grid.Column="2" Content="Copy Name"  Background="WhiteSmoke" Command="{Binding CopyFileCommand}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
     </Grid>
 </Window>
